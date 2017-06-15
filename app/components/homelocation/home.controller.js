@@ -20,9 +20,10 @@ class homeController {
 		let ctrl = this;
 		 let x = document.getElementById("checkBox").checked;
 		 console.log(x);
-			(x ? console.log('box is checked') : alert('Please Verify Age'));
+			(x ? (ctrl.$rootScope.show = true) : alert('Please Verify Age'));
 		// console.log('button is being pressed');
 		console.log('hello world');
+		
 	};
 
 };

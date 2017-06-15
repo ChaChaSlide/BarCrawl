@@ -8,6 +8,8 @@ import babelify from 'babelify';
 import source from 'vinyl-source-stream';
 import autoprefixer from 'gulp-autoprefixer'
 import concat from 'gulp-concat';
+import dotenv from 'gulp-dotenv';
+import rename from 'gulp-rename';
 
 const autoprefixerOptions = {
     browsers: [
@@ -76,4 +78,13 @@ gulp.task('css', function(){
 	gulp.watch('app/**/*.scss', ['sass'])
 });
 
-gulp.task('default',['connect', 'bundle', 'css']);
+gulp.task('dotenv',()=>{
+	return gulp.src('.env')
+	.pipe(dotenv())
+	.pipe(rename('env.json'))
+	.pipe(gulp.dest('dist'))
+
+});
+
+
+gulp.task('default',['connect', 'bundle', 'css', 'dotenv']);
