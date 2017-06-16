@@ -1,0 +1,12 @@
+<div id="nearest" ng-show="$ctrl.show">
+<table class="table table-bordered">
+	<thead>
+		<th>Name</th>
+		<th>Address</th>
+	</thead>
+	<tr ng-repeat="place in $ctrl.place">
+		<td>{{place.Name}}</td>
+		<td>{{place.Address}}</td>
+	</tr>
+</table>
+</div>	

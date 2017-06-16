@@ -1,0 +1,11 @@
+<div ng-hide="showme">
+	<div class="container" id="home">
+		<input class="Text" placeholder="Street Address, City, State, ZIP" id="homeAdress" ng-model="$ctrl.homeAddress">
+	</div>
+	<div class="container" id="ua">
+		<input type="checkbox" id="checkBox">
+		<p> By checking this box you are agreeing to our <a href="https://www.youtube.com/watch?v=HMUDVMiITOU">Terms and Conditions</a></p>
+		<br />
+		<button id="startButton" ng-click="$ctrl.home($ctrl.homeAddress); $ctrl.click(); $ctrl.mapData(); showme=true">Start Crawl!</button>
+	</div>
+</div>

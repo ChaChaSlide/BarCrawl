@@ -1,0 +1,48 @@
+#map {
+  width: 50%;
+  height: 62%;
+  float: right;
+  position: absolute !important;
+  top: 16%;
+  right: 0px; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0; }
+
+#nearest {
+  color: white;
+  margin-top: 25%;
+  width: 40%; }
+
+* {
+  padding: 0;
+  margin: 0; }
+
+body {
+  background-image: url(../../app/assets/Images/Background.jpg);
+  -webkit-background-size: 100% 100%;
+          background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: top left; }
+
+#home {
+  padding-top: 35%;
+  padding-left: 5%;
+  margin: auto; }
+
+#homeAdress {
+  width: 50%;
+  height: 100%; }
+
+#ua {
+  display: inline-block;
+  padding-left: 14%; }
+
+p {
+  color: white; }
+
+#ua {
+  display: inline-block;
+  padding-left: 14%; }
