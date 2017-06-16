@@ -42,7 +42,7 @@ var appCtrl = function appCtrl() {
 exports.default = appCtrl;
 
 },{}],3:[function(require,module,exports){
-module.exports = "\n<home></home>\n<!-- <ua></ua> -->\n";
+module.exports = "<h1>Bar Crawl</h1>\n<home></home>\n<!-- <ua></ua> -->\n";
 
 },{}],4:[function(require,module,exports){
 'use strict';
@@ -93,7 +93,7 @@ console.log('HomeComponent');
 exports.default = homeComponent;
 
 },{"./home.controller":6,"./home.html":7}],6:[function(require,module,exports){
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
 	value: true
@@ -108,12 +108,13 @@ var homeController = function () {
 		_classCallCheck(this, homeController);
 
 		var ctrl = this;
+		ctrl.title = "Bar Crawl";
 		ctrl.$rootScope = $rootScope;
 		console.log('home constructor');
 	}
 
 	_createClass(homeController, [{
-		key: 'home',
+		key: "home",
 		value: function home(homeAddress) {
 			var ctrl = this;
 			// let y = document.getElementById("homeAddress").value;
@@ -122,7 +123,7 @@ var homeController = function () {
 			console.log(ctrl.$rootScope.homeAddress);
 		}
 	}, {
-		key: 'click',
+		key: "click",
 		value: function click() {
 			var ctrl = this;
 			var x = document.getElementById("checkBox").checked;
