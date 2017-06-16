@@ -22,8 +22,21 @@ body {
   display: inline-block;
   padding-left: 14%; }
 
+<<<<<<< HEAD
 p {
   color: white; }
+=======
+#map {
+  width: 50%;
+  height: 62%;
+  margin-top: 35px;
+  margin-left: 45%; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0; }
+>>>>>>> 6e9253574f5414c9984b68dcf5d65ff18888b2c4
 
 #ua {
   display: inline-block;
