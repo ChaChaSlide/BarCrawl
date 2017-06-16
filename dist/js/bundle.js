@@ -42,11 +42,7 @@ var appCtrl = function appCtrl() {
 exports.default = appCtrl;
 
 },{}],3:[function(require,module,exports){
-<<<<<<< HEAD
-module.exports = "<h1>Bar Crawl</h1>\n<home></home>\n<!-- <ua></ua> -->\n";
-=======
-module.exports = "\n<home></home>\n<map></map>\n<!-- <ua></ua> -->\n";
->>>>>>> 6e9253574f5414c9984b68dcf5d65ff18888b2c4
+module.exports = "<!-- <h1>Bar Crawl</h1> -->\n<home></home> \n<!-- <div class=\"container\">\n<div class=\"row\">\n\t<div class=\"col-xs-4\"> -->\n\t\t<nearest></nearest>\n<!-- \t</div> -->\n<!-- \t<div class=\"col-xs-4\">\n -->\t<map></map> \n<!-- \t</div>\n</div>\n</div> -->";
 
 },{}],4:[function(require,module,exports){
 'use strict';
@@ -63,16 +59,15 @@ var _map = require('./components/map/map.component');
 
 var _map2 = _interopRequireDefault(_map);
 
+var _nearest = require('./components/nearest/nearest.component');
+
+var _nearest2 = _interopRequireDefault(_nearest);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// import uaComponent from './components/useragreement/ua.component'
+angular.module('app', []).component('app', _app2.default).component('home', _home2.default).component('map', _map2.default).component('nearest', _nearest2.default);
 
-
-angular.module('app', []).component('app', _app2.default).component('home', _home2.default).component('map', _map2.default
-// .component('ua',uaComponent)
-);
-
-},{"./app.component":1,"./components/homelocation/home.component":5,"./components/map/map.component":8}],5:[function(require,module,exports){
+},{"./app.component":1,"./components/homelocation/home.component":5,"./components/map/map.component":8,"./components/nearest/nearest.component":11}],5:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -117,6 +112,7 @@ var homeController = function () {
 
 		var ctrl = this;
 		ctrl.title = "Bar Crawl";
+		ctrl.cords = [];
 		ctrl.$rootScope = $rootScope;
 		console.log('home constructor');
 	}
@@ -140,6 +136,22 @@ var homeController = function () {
 			// console.log('button is being pressed');
 			console.log('hello world');
 		}
+	}, {
+		key: "mapData",
+		value: function mapData() {
+			var ctrl = this;
+			$.ajax({
+				url: 'https://maps.googleapis.com/maps/api/geocode/json?address=Lexington+Ky&key=AIzaSyBCaY59z9Lwl1jIOakmOhoBKIH5iqi1fUs&callback',
+				dataType: 'json',
+				success: function success(data) {
+					ctrl.$rootScope.cords = {
+						lng: data.results[0].geometry.location.lng,
+						lat: data.results[0].geometry.location.lat
+					};
+					console.log(ctrl.$rootScope.cords);
+				}
+			});
+		}
 	}]);
 
 	return homeController;
@@ -152,7 +164,7 @@ console.log('homeCtrl is working');
 exports.default = homeController;
 
 },{}],7:[function(require,module,exports){
-module.exports = "<div ng-hide=\"showme\">\n\t<div class=\"container\" id=\"home\">\n\t\t<input class=\"Text\" placeholder=\"Street Address, City, State, ZIP\" id=\"homeAdress\" ng-model=\"$ctrl.homeAddress\">\n\t</div>\n\t<div class=\"container\" id=\"ua\">\n\t\t<input type=\"checkbox\" id=\"checkBox\">\n\t\t<p> By checking this box you are agreeing to our <a href=\"https://www.youtube.com/watch?v=HMUDVMiITOU\">Terms and Conditions</a></p>\n\t\t<br />\n\t\t<button id=\"startButton\" ng-click=\"$ctrl.home($ctrl.homeAddress); $ctrl.click(); showme=true\">Start Crawl!</button>\n\t</div>\n</div>";
+module.exports = "<div ng-hide=\"showme\">\n\t<div class=\"container\" id=\"home\">\n\t\t<input class=\"Text\" placeholder=\"Street Address, City, State, ZIP\" id=\"homeAdress\" ng-model=\"$ctrl.homeAddress\">\n\t</div>\n\t<div class=\"container\" id=\"ua\">\n\t\t<input type=\"checkbox\" id=\"checkBox\">\n\t\t<p> By checking this box you are agreeing to our <a href=\"https://www.youtube.com/watch?v=HMUDVMiITOU\">Terms and Conditions</a></p>\n\t\t<br />\n\t\t<button id=\"startButton\" ng-click=\"$ctrl.home($ctrl.homeAddress); $ctrl.click(); $ctrl.mapData(); showme=true\">Start Crawl!</button>\n\t</div>\n</div>";
 
 },{}],8:[function(require,module,exports){
 'use strict';
@@ -189,8 +201,6 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 var _googleMaps = require('google-maps');
 
 var _googleMaps2 = _interopRequireDefault(_googleMaps);
@@ -205,77 +215,147 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 _googleMaps2.default.KEY = _env2.default.GOOGLE_KEY;
 
-var mapController = function () {
-	function mapController($rootScope, $interval) {
-		_classCallCheck(this, mapController);
+var mapController = function mapController($rootScope, $interval) {
+	_classCallCheck(this, mapController);
 
-		var ctrl = this;
-		ctrl.title = "Bar Crawl";
-		ctrl.userAddress = "Initial";
-		ctrl.show = false;
-		ctrl.$rootScope = $rootScope;
-		ctrl.$rootScope.$watch('home', function () {
-			ctrl.userAddress = ctrl.$rootScope.home;
+	var ctrl = this;
+	ctrl.title = "Bar Crawl";
+	ctrl.userAddress = "Initial";
+	ctrl.show = false;
+	ctrl.cords = [];
+	ctrl.$rootScope = $rootScope;
+
+	ctrl.$rootScope.$watch('home', function () {
+		ctrl.userAddress = ctrl.$rootScope.home;
+	});
+	console.log(ctrl.userAddress);
+
+	ctrl.$rootScope.$watch('show', function () {
+		ctrl.show = ctrl.$rootScope.show;
+	});
+
+	ctrl.$rootScope.$watch('cords', function () {
+		ctrl.cords = ctrl.$rootScope.cords;
+	});
+
+	_googleMaps2.default.load(function (google) {
+		var directionsService = new google.maps.DirectionsService();
+		var directionsDisplay = new google.maps.DirectionsRenderer();
+		var myLatLng = { lat: 38.042160, lng: -84.492538 };
+		var yourLatLng = { lat: 38.049490, lng: -84.499809 };
+		var map = new google.maps.Map(document.getElementById('map'), {
+			center: {
+				lat: 38.042160,
+				lng: -84.492538
+			},
+			zoom: 15
 		});
-		console.log(ctrl.userAddress);
+		var marker = new google.maps.Marker({
+			position: myLatLng,
+			map: map,
+			title: 'hello world'
 
-		ctrl.$rootScope.$watch('show', function () {
-			ctrl.show = ctrl.$rootScope.show;
 		});
 
-		_googleMaps2.default.load(function (google) {
-			var map = new google.maps.Map(document.getElementById('map'), {
-				center: {
-					lat: 32.746152,
-					lng: -117.159194
-				},
-				zoom: 15
-			});
+		directionsDisplay.setMap(map);
 
-			var myLatLng = { lat: 32.746152, lng: -117.159194 };
-			var marker = new google.maps.Marker({
-				position: myLatLng,
-				map: map,
-				title: 'hello world'
-			});
+		var onChangeHandler = function onChangeHandler() {
+			calculateAndDisplayRoute(directionsService, directionsDisplay);
+			console.log('im working dick head');
+		};
+	});
+
+	function calculateAndDisplayRoute(directionsService, directionsDisplay) {
+		directionsService.route({
+			'origin': myLatLng,
+			'destinaton': yourLatLng,
+			'travelMode': 'DRIVING'
+
+		}, function (response, status) {
+			if (status === 'OK') {
+				directionsDisplay.setDirections(response);
+			} else {
+				window.alert('directions request failed due to ' + status);
+			}
 		});
-
-		//ctrl.cords =[];
-
-	}
-
-	_createClass(mapController, [{
-		key: 'mapData',
-		value: function mapData() {
-			var ctrl = this;
-			$.ajax({
-				url: 'https://maps.googleapis.com/maps/api/geocode/json?address=273+E+Maxwell+st+lexington+ky&key=AIzaSyBCaY59z9Lwl1jIOakmOhoBKIH5iqi1fUs&callback',
-				dataType: 'json',
-				success: function success(data) {
-					ctrl.cords = {
-						lng: data.results[0].geometry.location.lng,
-						lat: data.results[0].geometry.location.lat
-					};
-				}
-			});
-		}
-	}]);
-
-	return mapController;
-}();
+	};
+	// });
+	// console.log(ctrl.cords.lng);
+	// console.log(cords.lng);
+	// mapData();
+};
 
 ;
 
-console.log('mapCtrl is working');
+console.log('Sup doc');
 
 exports.default = mapController;
 
-},{"../../../dist/env.json":11,"google-maps":12}],10:[function(require,module,exports){
-module.exports = "    <div ng-show=\"$ctrl.show\" id=\"map\"></div>\n <!-- \n    <script src=\"https://maps.googleapis.com/maps/api/js?key=AIzaSyBCaY59z9Lwl1jIOakmOhoBKIH5iqi1fUs&callback=initMap\"\n    async defer></script>\n\n   \n<!-- \n<script type=\"text/javascript\" src=\"https://maps.googleapis.com/maps/api/geocode/json?address=273+E+Maxwell+st+lexington+ky&key=AIzaSyBCaY59z9Lwl1jIOakmOhoBKIH5iqi1fUs&callback\"></script>\n<script type=\"text/javascript\">\n\nvar geocoder = new google.maps.Geocoder();\nvar address = \"273 E Maxwell st lexington ky\";\n\ngeocoder.geocode( { 'address', address}, function(results, status) {\n\n  if (status == google.maps.GeocoderStatus.OK) {\n    var latitude = results[0].geometry.location.lat();\n    var longitude = results[0].geometry.location.lng();\n    console.log(latitude);\n  } \n}); \n</script>";
+},{"../../../dist/env.json":14,"google-maps":15}],10:[function(require,module,exports){
+module.exports = "    <div id=\"map\" ng-show=\"$ctrl.show\"></div>\n";
 
 },{}],11:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _nearest = require('./nearest.html');
+
+var _nearest2 = _interopRequireDefault(_nearest);
+
+var _nearest3 = require('./nearest.controller');
+
+var _nearest4 = _interopRequireDefault(_nearest3);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var nearestComponent = {
+	bindings: {},
+	template: _nearest2.default,
+	controller: ['$rootScope', '$interval', _nearest4.default],
+	controllerAs: '$ctrl'
+};
+
+console.log('nearestComponent');
+
+exports.default = nearestComponent;
+
+},{"./nearest.controller":12,"./nearest.html":13}],12:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var nearestController = function nearestController($rootScope, $interval) {
+	_classCallCheck(this, nearestController);
+
+	var ctrl = this;
+	ctrl.title = "Bar Crawl";
+	ctrl.show = false;
+	ctrl.place = [{ Name: 'Tin roof', Address: '303 South LimeStone Lexington Ky' }, { Name: 'McCarthy\'s Irish Pub', Address: '177 South Upper Street' }, { Name: 'Centro', Address: '113 Cheapside Lexington' }, { Name: 'The Burl', Address: '375 Thompson Road' }];
+	ctrl.$rootScope = $rootScope;
+
+	ctrl.$rootScope.$watch('show', function () {
+		ctrl.show = ctrl.$rootScope.show;
+	});
+	console.log('nearest constructor!!!!!!');
+};
+
+console.log('nearestCtrl is working');
+
+exports.default = nearestController;
+
+},{}],13:[function(require,module,exports){
+module.exports = "<div id=\"nearest\" ng-show=\"$ctrl.show\">\n<table class=\"table table-bordered\">\n\t<thead>\n\t\t<th>Name</th>\n\t\t<th>Address</th>\n\t</thead>\n\t<tr ng-repeat=\"place in $ctrl.place\">\n\t\t<td>{{place.Name}}</td>\n\t\t<td>{{place.Address}}</td>\n\t</tr>\n</table>\n</div>\t\n";
+
+},{}],14:[function(require,module,exports){
 module.exports={"GOOGLE_KEY":"AIzaSyBCaY59z9Lwl1jIOakmOhoBKIH5iqi1fUs"}
-},{}],12:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 (function(root, factory) {
 
 	if (root === null) {

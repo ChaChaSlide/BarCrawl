@@ -9,8 +9,10 @@ class mapController {
 		ctrl.title = "Bar Crawl";
 		ctrl.userAddress ="Initial";
 		ctrl.show = false;
+		ctrl.cords = [];
 		ctrl.$rootScope = $rootScope;
-		ctrl.$rootScope.$watch ('home',() =>{
+		
+		ctrl.$rootScope.$watch ('home',() => {
 			ctrl.userAddress = ctrl.$rootScope.home;
 		});
 		console.log(ctrl.userAddress); 
@@ -19,45 +21,63 @@ class mapController {
 			ctrl.show = ctrl.$rootScope.show;
 		})
 
+		ctrl.$rootScope.$watch('cords',() => {
+			ctrl.cords = ctrl.$rootScope.cords
+		})
+
 		GoogleMapsLoader.load((google) => {
+			let directionsService = new google.maps.DirectionsService;
+			let directionsDisplay = new google.maps.DirectionsRenderer;
+			let myLatLng = {lat: 38.042160, lng: -84.492538};
+			let yourLatLng = {lat: 38.049490, lng: -84.499809};  
 	        let map = new google.maps.Map(document.getElementById('map'), {
 	        center: {
-	        	lat: 32.746152,
-	        	lng: -117.159194
+	        	lat: 38.042160,
+	        	lng: -84.492538
 	        },
 	         zoom: 15
 	        });
-
-		let myLatLng = {lat: 32.746152, lng: -117.159194 };
-		let marker = new google.maps.Marker({
+	        let marker = new google.maps.Marker({
 			position: myLatLng,
 			map: map,
 			title: 'hello world'
-		});
-		});
 
-		//ctrl.cords =[];
+			});
 
- 
+	        directionsDisplay.setMap(map);
+
+	        let onChangeHandler = () => {
+	        	calculateAndDisplayRoute(directionsService,directionsDisplay);
+			console.log('im working dick head');
+	        }; 
+	    });
+
+
+	      function calculateAndDisplayRoute(directionsService, directionsDisplay) {
+	        	directionsService.route({
+	        		'origin': myLatLng,
+	        		'destinaton': yourLatLng,
+	        		'travelMode': 'DRIVING',
+
+	        	},
+	        	function(response, status){
+	        		if (status === 'OK'){
+	        			directionsDisplay.setDirections(response);
+	        		} else{
+	        			window.alert('directions request failed due to ' + status);
+	        		}
+	        	});
+	        };
+		// });
+		// console.log(ctrl.cords.lng);
+		// console.log(cords.lng);
+		// mapData();
 	};
-	mapData(){
-		const ctrl = this;
-		$.ajax({
-			url: 'https://maps.googleapis.com/maps/api/geocode/json?address=273+E+Maxwell+st+lexington+ky&key=AIzaSyBCaY59z9Lwl1jIOakmOhoBKIH5iqi1fUs&callback',
-			dataType: 'json',
-			success: function(data){
-				ctrl.cords = {
-					lng: data.results[0].geometry.location.lng,
-					lat: data.results[0].geometry.location.lat
-				}
-			}
-		})
-	}
 };
 
 
 
-console.log('mapCtrl is working');
+console.log('Sup doc');
 
 
 export default mapController;

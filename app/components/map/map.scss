@@ -1,14 +1,14 @@
-
-      #map {
-        width: 50%;
-        height: 62%;
-        margin-top: 35px;
-        margin-left: 45%;
-        
-      }
-        html, body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
-   
+#map {
+  width: 50%;
+  height: 62%;
+  float:right;
+  position: absolute !important;
+  top: 16%;
+  right: 0px;
+}
+  html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+     

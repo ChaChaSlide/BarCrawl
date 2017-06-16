@@ -60,6 +60,10 @@ gulp.task('bundle',() => {
 
 	function bundle(){
 		b.bundle()
+        .on('error', function(err){
+            console.log(err.message);
+            this.emit('end');
+        })
 		.pipe(source('bundle.js'))
 		.pipe(gulp.dest('dist/js'))
 	}
@@ -78,7 +82,7 @@ gulp.task('css', function(){
 	gulp.watch('app/**/*.scss', ['sass'])
 });
 
-gulp.task('dotenv',()=>{
+gulp.task('dotenv',() => {
 	return gulp.src('.env')
 	.pipe(dotenv())
 	.pipe(rename('env.json'))
